@@ -2,6 +2,8 @@ const express = require("express")
 const TestModel = require("../model/Test")
 const TestQuestionModel = require("../model/TestQuestions")
 const isAuth = require("../middleware/isAuth")
+const { getFormRouter } = require("../controller/sharedController")
+const { submitFormResponse, getFormResponses } = require("../controller/responseController")
 
 const TestRouter = express.Router()
 const TestQuestionsRouter = express.Router()
@@ -80,6 +82,8 @@ TestRouter.post("/create-questions", isAuth, async (req, res) => {
     }
 })
 
+
+
 TestRouter.get("/get-test-testQuestions", async (req, res) => {
     try {
         const FetchTestQuestion = await TestQuestionModel.find().populate("TestId")
@@ -154,6 +158,9 @@ TestRouter.get("/get-forms/:formId", isAuth, async (req, res) => {
         })
     }
 })
+
+
+
 
 TestRouter.put("/update-form/:formId", isAuth, async (req, res) => {
     try {
@@ -284,6 +291,15 @@ TestRouter.delete("/delete-form/:formId", async (req, res) => {
         });
     }
 });
+
+
+//sharing the form as a link
+
+TestRouter.get("/get-public-form/:formId", getFormRouter)
+
+TestRouter.post("/submit-form-response", submitFormResponse)
+
+TestRouter.get("/get-form-responses/:formId", getFormResponses)
 
 module.exports = {
     TestRouter,
