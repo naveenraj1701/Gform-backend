@@ -22,7 +22,7 @@ app.use(cors({
     origin: [
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://your-frontend-name.onrender.com"
+        "https://gform-frontend.onrender.com"
     ],
     credentials: true
 }))
