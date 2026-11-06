@@ -21,7 +21,8 @@ const port = process.env.PORT || 4001
 app.use(cors({
     origin: [
         "http://localhost:3000",
-        "http://localhost:3001"
+        "http://localhost:3001",
+        "https://your-frontend-name.onrender.com"
     ],
     credentials: true
 }))
