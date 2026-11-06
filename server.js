@@ -18,15 +18,6 @@ const app = express()
 
 const port = process.env.PORT || 4001
 
-app.use(cors({
-    origin: [
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "https://gform-frontend.onrender.com"
-    ],
-    credentials: true
-}))
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/upload", express.static("upload"))
