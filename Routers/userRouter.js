@@ -153,27 +153,33 @@ UserRoute.delete("/delete-question/:formId/:questionId", async (req, res) => {
 //Download the form in pdf//
 
 UserRoute.get("/download-form/:formId", async (req, res) => {
-    let browser;
+    let browser
 
     try {
-        const { formId } = req.params;
+        const { formId } = req.params
 
-        const form = await TestModel.findById(formId);
+        const form = await TestModel.findById(formId)
 
         if (!form) {
             return res.send({
                 success: false,
                 message: "Form is not found"
-            });
+            })
         }
 
         const questionData = await TestQuestionModel.findOne({
             TestId: form._id
-        });
+        })
 
-        const browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            headless: true,
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox"
+            ]
+        })
 
-        const page = await browser.newPage();
+        const page = await browser.newPage()
 
         const html = await ejs.renderFile(
             path.join(__dirname, "../views/home.ejs"),
@@ -182,36 +188,38 @@ UserRoute.get("/download-form/:formId", async (req, res) => {
                 description: form.description || "",
                 questions: questionData ? questionData.questions : []
             }
-        );
+        )
 
         await page.setContent(html, {
             waitUntil: "networkidle0"
-        });
+        })
 
         const pdf = await page.pdf({
             format: "A4",
             printBackground: true
-        });
+        })
 
-        res.contentType("application/pdf");
+        res.setHeader("Content-Type", "application/pdf")
         res.setHeader(
             "Content-Disposition",
-            `attachment; filename="form.pdf"`
-        );
+            'attachment; filename="form.pdf"'
+        )
 
-        return res.send(pdf);
+        return res.send(pdf)
+
     } catch (err) {
-        console.log("Error in downloading the form", err);
+        console.log("Error in downloading the form:", err)
 
         return res.send({
             success: false,
             message: "Trouble in downloading the form"
-        });
+        })
+
     } finally {
         if (browser) {
-            await browser.close();
+            await browser.close()
         }
     }
-});
+})
 
 module.exports = UserRoute
