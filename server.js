@@ -52,12 +52,12 @@ app.use(session({
     secret: process.env.secretKey,
     resave: false,
     saveUninitialized: false,
-    // cookie: {
-    //     httpOnly: true,
-    //     secure: false,
-    //     sameSite: "lax",
-    //     maxAge: 24 * 60 * 60 * 1000
-    // }
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }))
 
 
