@@ -18,6 +18,15 @@ const app = express()
 
 const port = process.env.PORT || 4001
 
+app.use(cors({
+    origin: [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://gform-frontend.onrender.com"
+    ],
+    credentials: true
+}))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/upload", express.static("upload"))
@@ -38,6 +47,8 @@ store.on("error", err => {
     console.log("Session store error:", err)
 })
 
+app.set("trust proxy", 1)
+
 app.use(session({
     store: store,
     name: "connect.sid",
@@ -46,8 +57,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000
     }
 }))
